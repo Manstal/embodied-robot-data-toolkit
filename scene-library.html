@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>初始场景数据集</title>
+<style>
+:root{font-family:Inter,"Microsoft YaHei UI",system-ui,sans-serif;color:#182831;background:#f1f5f4;--ink:#182831;--dim:#4d6669;--line:#d7e4e1;--dark:#112d30;--green:#146b58;--mint:#e6f3ee}
+*{box-sizing:border-box}body{margin:0}header{background:var(--dark);color:white;padding:17px max(22px,calc((100vw - 1300px)/2));display:flex;gap:14px;align-items:center;font-weight:700;white-space:nowrap}.icon{background:#246b5d;border:1px solid #5c9e8e;padding:5px 8px;border-radius:8px;font-size:19px}.shell{max-width:1340px;margin:auto;padding:28px 20px}.intro{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:19px}h1,h2,h3,p{margin:0}h1{font-size:30px}h2{font-size:16px}h3{font-size:14px}.muted{color:var(--dim);font-size:13px;line-height:1.6}.intro p{margin-top:7px}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}button,input,select{font:inherit}button,select,.upload{cursor:pointer}button,.upload,input[type=search],select{padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:white;color:var(--ink);min-height:36px;font-size:13px}button:hover:not(:disabled),.upload:hover{background:var(--mint);border-color:#8bbcae}button:disabled{opacity:.48;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,.upload:focus-within{outline:3px solid #338a77;outline-offset:2px}.primary{color:white;background:var(--green);border-color:var(--green)}.primary:hover{background:#105644;color:white}.upload input{position:absolute;width:1px;height:1px;opacity:0}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:17px}.stat{background:white;border:1px solid var(--line);border-radius:9px;padding:13px}.stat b{display:block;font-size:24px;margin-top:4px}.stat span{font-size:12px;color:var(--dim)}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:15px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:10px;min-width:0}.panel-top{padding:13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.groups{padding:8px;max-height:68vh;overflow:auto;display:grid;gap:5px}.group{width:100%;display:flex;justify-content:space-between;gap:5px;align-items:center;text-align:left;border-color:transparent}.group[aria-pressed=true]{background:var(--mint);border-color:#8bbcae;font-weight:700}.group span:first-child{overflow-wrap:anywhere}.group span:last-child{color:var(--dim);font-size:11px;white-space:nowrap}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;padding:12px}.item{border:1px solid var(--line);border-radius:8px;overflow:hidden}.item img,.placeholder{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#132e32}.placeholder{display:grid;place-items:center;color:#e2edeb;font-size:12px}.item-copy{padding:9px;display:grid;gap:6px;overflow-wrap:anywhere}.item-head{display:flex;justify-content:space-between;align-items:start;gap:6px}.badge{font-size:11px;background:#e6f0f9;color:#305778;padding:3px 5px;border-radius:4px;white-space:nowrap}.badge.own{background:var(--mint);color:#225848}.item-copy button{justify-self:start;padding:4px 7px;min-height:30px}.pagination{padding:9px 12px;border-top:1px solid var(--line)}.empty{grid-column:1/-1;text-align:center;padding:50px 12px}.notice{min-height:22px;margin-bottom:8px;color:#783327;overflow-wrap:anywhere}.notice:empty{display:none}.subhead{margin-top:2px}.scene-name{line-height:1.45}.filters input{max-width:180px}dialog{border:1px solid var(--line);width:min(460px,calc(100vw - 24px));padding:0;border-radius:11px;color:var(--ink)}dialog::backdrop{background:#112d3080}.modal-content{padding:15px;display:grid;gap:12px}.modal-content label{display:grid;gap:5px;font-size:13px}.modal-content input{padding:7px;border:1px solid var(--line);border-radius:6px;min-width:0}.modal-buttons{justify-content:end}[hidden]{display:none!important}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:215px minmax(0,1fr)}}@media(max-width:720px){.layout{grid-template-columns:1fr}.groups{max-height:180px}.stats{grid-template-columns:repeat(3,1fr)}.shell{padding:18px 10px}.filters input{max-width:135px}}@media(max-width:380px){.grid{grid-template-columns:1fr}}
+.tasks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}.task{display:flex;justify-content:space-between;align-items:center;text-align:left;gap:8px;padding:10px 12px;line-height:1.45}.task[aria-pressed=true]{background:var(--mint);border-color:#8bbcae;font-weight:700;color:#154b41}.task-count{font-variant-numeric:tabular-nums;color:var(--dim)}@media(max-width:720px){.tasks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.coverage{padding:14px;border-bottom:1px solid var(--line);display:grid;gap:8px;background:#f6faf8}.coverage-list{display:flex;gap:6px;flex-wrap:wrap}.coverage-list span{padding:4px 7px;border-radius:5px;background:var(--mint);font-size:12px}.coverage label{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}.coverage select{max-width:100%}.target{color:#174d42;font-size:13px;font-weight:700}
+.frame-preview{display:grid;place-items:center;aspect-ratio:4/3;background:#132e32;overflow:hidden}.frame-surface{position:relative;width:100%}.frame-surface img{height:auto;aspect-ratio:auto}.frame-layer{position:absolute;inset:0;pointer-events:none}.target-box{position:absolute;border:2px solid #ff2838;border-radius:2px;box-shadow:0 0 0 1px #34080c9e}.target-box.needs-review{border-style:dashed}#box-dialog{width:min(700px,calc(100vw - 24px))}.box-editor{position:relative;cursor:crosshair;touch-action:none;user-select:none}.box-editor img{width:100%;display:block;pointer-events:none}.box-editor .frame-layer{pointer-events:none}.box-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:end}
+.views{margin-bottom:14px}.views button[aria-pressed=true]{background:#19463e;color:#fff;border-color:#19463e}.aggregate-controls{padding:13px;border-bottom:1px solid var(--line)}.aggregate-controls select{margin-left:5px}.aggregate-member-list{padding:0 12px 12px;display:grid;gap:6px}.aggregate-member-list button{text-align:left;overflow-wrap:anywhere}.aggregate-preview{width:100%;display:block;object-fit:contain;background:#132e32;aspect-ratio:4/3}.aggregate-detail{margin-bottom:12px}.aggregate-summary{padding:11px 14px}.aggregate-grid .item-copy{padding:11px}.aggregate-grid button{justify-self:stretch;text-align:left}
+.sample-files{display:grid;gap:5px;justify-items:start}.sample-files button{text-align:left;overflow-wrap:anywhere;max-width:100%}
+.coverage-reference{display:block;width:min(100%,300px);height:auto;border-radius:6px}
+.match-list{display:grid;gap:6px}.match-list button{display:flex;gap:10px;align-items:center;text-align:left}.match-list img{width:104px;aspect-ratio:16/9;object-fit:contain}.match-list button[aria-pressed=true]{border-color:#398673;background:var(--mint)}#sample-dialog{max-height:90vh}
+</style>
+<header><span class="icon" aria-hidden="true">▦</span>具身数据采集</header>
+<main class="shell">
+  <div class="intro"><div><h1>初始场景数据集</h1><p class="muted" id="loaded">选择任务，查看不同初始场景的官方和自采 Episode。</p></div><div class="actions"><label class="upload primary">导入场景索引<input id="import" type="file" accept=".json,application/json"></label><button id="export" disabled>导出分组清单</button></div></div>
+  <div id="notice" class="notice" role="status"></div>
+  <p id="sync-status" class="muted" role="status"></p>
+  <nav id="tasks" class="tasks" aria-label="比赛任务"></nav>
+  <nav class="actions views" aria-label="浏览方式"><button id="show-original" aria-pressed="true">原始场景</button><button id="show-aggregate" aria-pressed="false">场景聚合</button></nav>
+  <div id="stats" class="stats"></div>
+  <section class="panel" id="aggregate-panel" hidden aria-labelledby="aggregate-title">
+    <div class="panel-top"><div><h2 id="aggregate-title">场景聚合</h2><p class="muted subhead" id="aggregate-count" aria-live="polite"></p></div><button id="sample-match-open" class="primary">按首帧匹配自采样本</button></div>
+    <div class="actions aggregate-controls"><label>聚合程度 <select id="aggregate-level"><option value="细分">细分</option><option value="推荐" selected>推荐</option><option value="宽松">宽松</option></select></label><label><input type="checkbox" id="aggregate-multiple" checked> 仅显示多条样本的组</label></div>
+    <p class="muted aggregate-summary">按顶部相机首帧比较可见物品和摆放。组内抓取指令可以不同。</p>
+    <div class="grid aggregate-grid" id="aggregate-grid"></div>
+  </section>
+  <div class="layout" id="original-panel">
+    <aside class="panel"><div class="panel-top"><h2>场景分组</h2></div><div id="groups" class="groups"></div></aside>
+    <section class="panel"><div class="panel-top"><div><h2 id="title">全部样本</h2><p class="muted subhead" id="count"></p></div><div class="actions filters"><button id="return-aggregate" hidden>返回聚合组</button><select id="source" aria-label="筛选数据来源"><option value="">全部来源</option><option value="official">官方样本</option><option value="own">自采样本</option></select><input id="search" type="search" placeholder="搜索编号或任务" aria-label="搜索编号或任务"></div></div>
+      <section class="coverage" id="coverage" aria-label="场景物品覆盖" hidden></section>
+      <div class="grid" id="grid"></div><div class="pagination actions" id="pagination"><button id="prev">上一页</button><span id="page" class="muted"></span><button id="next">下一页</button></div>
+    </section>
+  </div>
+</main>
+<dialog id="dialog" aria-labelledby="dialog-title"><form id="form"><div class="panel-top"><h2 id="dialog-title">调整任务与场景</h2></div><div class="modal-content"><p id="episode-info" class="muted"></p><label>所属任务<select id="task-destination"></select></label><label>归入场景<select id="destination"></select></label><label id="new-name" hidden>新场景名称<input id="name" maxlength="60" placeholder="例如 香蕉靠右、蓝盘靠左"></label><p class="muted">手动调整会保留在本浏览器，下次导入同编号样本时继续使用。</p><div class="actions modal-buttons"><button type="button" id="cancel">取消</button><button type="submit" class="primary">保存</button></div></div></form></dialog>
+<dialog id="box-dialog" aria-labelledby="box-title"><div class="panel-top"><h2 id="box-title">调整目标红框</h2></div><div class="modal-content"><p id="box-help" class="muted"></p><div id="box-editor" class="box-editor"><img id="box-image" alt="用于调整红框的初始画面" draggable="false"><div id="box-layer" class="frame-layer" aria-hidden="true"></div></div><div class="box-actions"><button id="box-reset">清空重画</button><button id="box-cancel">取消</button><button id="box-save" class="primary">保存红框</button></div></div></dialog>
+<dialog id="sample-dialog" aria-labelledby="sample-title"><form id="sample-form">
+  <div class="panel-top"><h2 id="sample-title">补充自采样本</h2></div>
+  <div class="modal-content">
+    <p id="sample-scene" class="muted"></p>
+    <label><span id="sample-target-label">这次抓取的物品</span><input id="sample-target" list="sample-targets" maxlength="80" required placeholder="选择或输入物品名称"><datalist id="sample-targets"></datalist></label>
+    <label>采集文件（可多选）<input id="sample-files" type="file" multiple required></label>
+    <label><span id="sample-frame-label">首帧图片（可选）</span><input id="sample-frame" type="file" accept="image/jpeg,image/png,image/webp"></label>
+    <section id="sample-match-panel" hidden>
+      <p class="muted">优先使用上传的首帧图片。若只选了一个可播放的视频，会读取其首帧。多机位数据请提供顶部相机首帧。</p>
+      <img id="sample-match-preview" class="coverage-reference" alt="自采样本首帧" hidden>
+      <button type="button" id="sample-match-run">查找相似场景</button>
+      <p id="sample-match-status" class="muted" role="status"></p>
+      <div class="match-list" id="sample-match-list"></div>
+    </section>
+    <p class="muted">一次添加一条样本。可选一个 ZIP，或选齐同一条样本的视频和数据文件。文件存到当前浏览器，保留手里的原始文件。</p>
+    <p id="sample-status" class="notice" role="status"></p>
+    <div class="actions modal-buttons"><button type="button" id="sample-cancel">取消</button><button type="submit" id="sample-save" class="primary">添加样本</button></div>
+  </div>
+</form></dialog>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const review = 'review';
+const overridesKey = 'robot-scene-index-overrides-v2';
+const tasks = new Map([
+  ['pick_place','单臂简单抓放'], ['cosmetics','单臂化妆品收纳'],
+  ['sweeping','双臂垃圾清扫'], ['pending','任务待确认']
+]);
+const methods = {label:'场景标签',match:'相似度匹配',visual:'相似度分组',review:'待复核',manual:'手动归类'};
+const objectNames = new Map(Object.entries({
+  'bunch of grapes':'葡萄', lemon:'柠檬', orange:'橙子', mushroom:'蘑菇', strawberry:'草莓',
+  'red delicious apple':'红蛇果', mandarin:'橘子', cherries:'樱桃', carrot:'胡萝卜',
+  'red chili pepper':'红尖椒', cucumber:'青瓜', 'green apple':'青苹果', eggplant:'茄子',
+  'red apple':'红苹果', potato:'土豆', 'bell pepper':'彩椒', tomato:'西红柿', mangosteen:'山竹',
+  persimmon:'柿子', kiwi:'猕猴桃', onion:'洋葱', avocado:'牛油果', pomegranate:'石榴',
+  pumpkin:'南瓜', pear:'梨', mango:'芒果', banana:'香蕉', 'passion fruit':'百香果',
+  'dragon fruit':'火龙果', peach:'桃子', 'wax apple':'莲雾', papaya:'木瓜', watermelon:'西瓜',
+  pineapple:'菠萝', 'beige lip gloss tube':'米色唇蜜瓶', 'black lipstick with a clear cap':'黑色透明盖口红',
+  'pink makeup puff':'粉色粉扑', 'dark-colored round contour compact':'深色圆形阴影盒',
+  'light-colored round highlighter compact':'浅色圆形高光盒',
+  'rectangular multicolor eyeshadow palette':'多色长方形眼影盘',
+  'beige lotion pump bottle':'米色按压乳液瓶', 'large black and gold makeup brush':'大号黑金化妆刷',
+  'small black and gold makeup brush':'小号黑金化妆刷', 'black round glitter compact':'黑色圆形亮片盒'
+}));
+const targetPattern = /^(?:could you )?(?:pick up|put|place|move|store|take|organize) the (.+?)(?: and (?:place|put) it| on(?:to)? the | in(?:to|side)? the )/i;
+function objectTarget(record) {
+  if (record.source === 'own' && typeof record.collectedObject === 'string') return record.collectedObject.trim();
+  const name = (record.task || '').trim().match(targetPattern)?.[1].toLowerCase();
+  return name ? objectNames.get(name) || name : '';
+}
+function isTargetBox(box) {
+  return Array.isArray(box) && box.length === 4 && box.every(v => Number.isFinite(v) && v >= 0 && v <= 1)
+    && box[2] > 0 && box[3] > 0 && box[0]+box[2] <= 1.00002 && box[1]+box[3] <= 1.00002;
+}
+const boxStorageKey = 'robot-scene-target-boxes-v1';
+let boxOverrides = new Map();
+try { boxOverrides = new Map(JSON.parse(localStorage.getItem(boxStorageKey) || '[]')); } catch {}
+const boxesFor = record => {
+  const value = boxOverrides.get(record.id) ?? record.targetBoxes;
+  return Array.isArray(value) ? value.filter(isTargetBox) : [];
+};
+function paintBoxes(layer, boxes, review = false) {
+  layer.replaceChildren(...boxes.map(([x,y,width,height]) => {
+    const box = el('span','target-box' + (review ? ' needs-review' : ''));
+    Object.assign(box.style,{left:x*100+'%',top:y*100+'%',width:width*100+'%',height:height*100+'%'});
+    return box;
+  }));
+}
+function framePreview(record) {
+  const preview = el('div','frame-preview');
+  const surface = el('div','frame-surface');
+  const img = el('img');
+  const target = record.targetBoxLabel || objectTarget(record);
+  const boxes = boxesFor(record);
+  img.loading = 'lazy';
+  img.alt = record.id + ' 初始画面' + (boxes.length ? '，红框标出' + target : '');
+  img.onload = () => {
+    surface.style.width = Math.min(1, img.naturalWidth / img.naturalHeight * .75) * 100 + '%';
+  };
+  surface.append(img);
+  if (boxes.length) {
+    const layer = el('div','frame-layer');
+    layer.setAttribute('aria-hidden','true');
+    paintBoxes(layer,boxes,record.targetBoxNeedsReview && !boxOverrides.has(record.id));
+    surface.append(layer);
+  }
+  preview.append(surface);
+  img.src = 'data:image/jpeg;base64,' + record.thumbnail;
+  return preview;
+}
+function openBoxEditor(record) {
+  const dialog = $('box-dialog');
+  const editor = $('box-editor');
+  const layer = $('box-layer');
+  const multiple = configuration(record).taskType === 'sweeping';
+  let draft = boxesFor(record);
+  let anchor = null;
+  const point = event => {
+    const rect = editor.getBoundingClientRect();
+    return [(event.clientX-rect.left)/rect.width,(event.clientY-rect.top)/rect.height]
+      .map(value => Math.max(0,Math.min(1,value)));
+  };
+  const rectangle = ([x,y]) => [Math.min(x,anchor[0]),Math.min(y,anchor[1]),Math.abs(x-anchor[0]),Math.abs(y-anchor[1])];
+  const addBox = box => multiple ? [...draft,box] : [box];
+  editor.onpointerdown = event => {
+    if (event.button !== 0) return;
+    anchor = point(event);
+    editor.setPointerCapture(event.pointerId);
+  };
+  editor.onpointermove = event => {
+    if (anchor) paintBoxes(layer,addBox(rectangle(point(event))));
+  };
+  editor.onpointerup = event => {
+    if (!anchor) return;
+    const box = rectangle(point(event));
+    if (box[2] > .01 && box[3] > .01) draft = addBox(box);
+    anchor = null;
+    paintBoxes(layer,draft);
+  };
+  editor.onpointercancel = () => { anchor = null; paintBoxes(layer,draft); };
+  $('box-help').textContent = '目标 · ' + (record.targetBoxLabel || objectTarget(record) || '待确认')
+    + '。在图上拖动绘制红框。' + (multiple ? '可绘制多个框。' : '');
+  $('box-image').src = 'data:image/jpeg;base64,' + record.thumbnail;
+  $('box-reset').onclick = () => { draft = []; paintBoxes(layer,draft); };
+  $('box-cancel').onclick = () => dialog.close();
+  $('box-save').onclick = () => {
+    boxOverrides.set(record.id,draft);
+    try { localStorage.setItem(boxStorageKey,JSON.stringify([...boxOverrides])); }
+    catch { notice('浏览器无法保存红框调整。'); }
+    dialog.close();
+    drawEpisodes();
+  };
+  paintBoxes(layer,draft);
+  dialog.showModal();
+}
+let episodes = [];
+let overrides = new Map();
+try { overrides = new Map(JSON.parse(localStorage.getItem(overridesKey) || '[]')); } catch {}
+let selected = 'all';
+let selectedTask = 'pick_place';
+let page = 1;
+let editing = null;
+const pageSize = 18;
+const titleFor = (group, task = selectedTask) => groupsByTask.get(task).get(group)?.name || '场景';
+let groupsByTask = new Map();
+let aggregation = {};
+let aggregateView = false;
+let aggregateMembers = null;
+const confirmedKey = 'robot-scene-confirmed-objects-v1';
+let confirmedObjects = new Map();
+try { confirmedObjects = new Map(JSON.parse(localStorage.getItem(confirmedKey) || '[]').map(([key,names]) => [key,new Set(names)])); } catch {}
+function saveConfirmedObjects() {
+  try { localStorage.setItem(confirmedKey,JSON.stringify([...confirmedObjects].map(([key,names]) => [key,[...names]]))); } catch {}
+}
+const localSamples = new Map();
+const syncedSamples = new Map();
+const syncEnabled = ['127.0.0.1','localhost'].includes(location.hostname);
+let sampleContext;
+
+async function refreshSyncedSamples() {
+  if (!syncEnabled) return;
+  try {
+    const response = await fetch('/sync/samples',{cache:'no-store'});
+    if (!response.ok) return;
+    const before = JSON.stringify([...syncedSamples.values()]);
+    const {records,status} = await response.json();
+    $('sync-status').textContent = status;
+    if (JSON.stringify(records) === before) return;
+    episodes = episodes.filter(record => !syncedSamples.has(record.id));
+    syncedSamples.clear();
+    for (const record of records) syncedSamples.set(record.id,record);
+    episodes = mergeLocalSamples(episodes);
+    if (aggregateMembers) {
+      const current = aggregateMembers;
+      const {groups} = aggregateGroups(selectedTask,current.level);
+      const index = groups.findIndex(group => group.members.includes(current.anchor));
+      aggregateMembers = index < 0 ? null : groupScene(groups[index],index,current.level);
+    }
+    draw();
+  } catch { $('sync-status').textContent = '本机同步服务暂不可用。'; }
+}
+async function deleteOwnSample(record) {
+  if (!confirm('删除自采样本「' + (objectTarget(record) || record.id) + '」及本机保存的采集文件？')) return;
+  try {
+    if (syncedSamples.has(record.id)) {
+      const response = await fetch('/sync/delete',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:record.id})});
+      if (!response.ok) throw Error('同步服务未能删除样本。');
+      await refreshSyncedSamples();
+    } else {
+      await sampleTransaction('readwrite',store => store.delete(record.id));
+      localSamples.delete(record.id);
+      episodes = episodes.filter(item => item.id !== record.id);
+      aggregateMembers?.ids.delete(record.id);
+      draw();
+    }
+    notice('已删除本机自采样本。');
+  } catch (error) { notice('删除失败。' + error.message); }
+}
+
+function sampleDB() {
+  return new Promise((resolve,reject) => {
+    const request = indexedDB.open('robot-scene-own-samples-v1',1);
+    request.onupgradeneeded = () => request.result.createObjectStore('samples',{keyPath:'record.id'});
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(Error('请关闭其他打开此页面的窗口后重试。'));
+  });
+}
+async function sampleTransaction(mode,operation) {
+  const db = await sampleDB();
+  try {
+    return await new Promise((resolve,reject) => {
+      const tx = db.transaction('samples',mode);
+      const request = operation(tx.objectStore('samples'));
+      tx.oncomplete = () => resolve(request.result);
+      tx.onabort = () => reject(tx.error || Error('浏览器未能保存文件。'));
+    });
+  } finally { db.close(); }
+}
+function mergeLocalSamples(records) {
+  return [...records.filter(record => !localSamples.has(record.id) && !syncedSamples.has(record.id)),
+    ...syncedSamples.values(),...[...localSamples.values()].map(entry => entry.record)];
+}
+async function loadOwnSamples() {
+  try {
+    for (const entry of await sampleTransaction('readonly',store => store.getAll()))
+      localSamples.set(entry.record.id,entry);
+    episodes = mergeLocalSamples(episodes);
+    draw();
+  } catch { notice('当前浏览器无法读取本地自采样本。'); }
+}
+function objectCandidates() {
+  if (selectedTask === 'sweeping') return ['1 个纸团','2 个纸团','3 个纸团'];
+  return [...objectNames].filter(([name]) =>
+    /gloss|lipstick|makeup|compact|eyeshadow|lotion/.test(name) === (selectedTask === 'cosmetics'))
+    .map(([,name]) => name);
+}
+let matchSession = null;
+function openSample(scene,suggestion = '') {
+  sampleContext = scene ? {...scene,taskType:selectedTask} : null;
+  $('sample-form').reset();
+  matchSession = scene ? null : {taskType:selectedTask,level:$('aggregate-level').value};
+  $('sample-match-panel').hidden = Boolean(scene);
+  $('sample-frame-label').textContent = scene ? '首帧图片（可选）' : '顶部相机首帧（可选）';
+  resetMatch();
+  $('sample-status').textContent = '';
+  $('sample-scene').textContent = tasks.get(selectedTask) + ' · ' + (scene?.name || '待匹配场景');
+  $('sample-target-label').textContent = selectedTask === 'sweeping' ? '这次清扫的对象' : '这次抓取的物品';
+  $('sample-targets').replaceChildren(...[...new Set([...objectCandidates(),suggestion])].filter(Boolean).map(name => new Option(name)));
+  $('sample-target').value = suggestion;
+  $('sample-dialog').showModal();
+}
+function resetMatch() {
+  $('sample-match-preview').hidden = true;
+  $('sample-match-preview').removeAttribute('src');
+  $('sample-match-run').disabled = false;
+  $('sample-match-status').textContent = '';
+  $('sample-match-list').replaceChildren();
+  if (!matchSession) {
+    $('sample-save').disabled = false;
+    return;
+  }
+  matchSession = {...matchSession,thumbnail:null};
+  sampleContext = null;
+  $('sample-save').disabled = true;
+  $('sample-scene').textContent = tasks.get(matchSession.taskType) + ' · 待匹配场景';
+}
+$('sample-match-open').onclick = () => openSample(null);
+$('sample-files').onchange = $('sample-frame').onchange = () => { if (matchSession) resetMatch(); };
+function mediaEvent(media,event) {
+  return new Promise((resolve,reject) => {
+    const finish = error => {
+      clearTimeout(timer);
+      media.removeEventListener(event,ready);
+      media.removeEventListener('error',failed);
+      error ? reject(error) : resolve();
+    };
+    const ready = () => finish();
+    const failed = () => finish(Error('无法读取该媒体。'));
+    const timer = setTimeout(() => finish(Error('读取首帧超时。')),10000);
+    media.addEventListener(event,ready);
+    media.addEventListener('error',failed);
+  });
+}
+function encodeFrame(source,width,height) {
+  const canvas = el('canvas');
+  const scale = Math.min(1,640 / Math.max(width,height));
+  canvas.width = Math.max(1,Math.round(width * scale));
+  canvas.height = Math.max(1,Math.round(height * scale));
+  canvas.getContext('2d').drawImage(source,0,0,canvas.width,canvas.height);
+  return canvas.toDataURL('image/jpeg',0.82).split(',')[1];
+}
+async function jpegThumbnail(file) {
+  if (!file) return undefined;
+  const bitmap = await createImageBitmap(file);
+  try { return encodeFrame(bitmap,bitmap.width,bitmap.height); }
+  finally { bitmap.close(); }
+}
+async function matchingFrame() {
+  const photo = $('sample-frame').files[0];
+  if (photo) return jpegThumbnail(photo);
+  const videos = [...$('sample-files').files].filter(file =>
+    file.type.startsWith('video/') || /\.(mp4|webm|mov|m4v|avi|mkv)$/i.test(file.name));
+  if (videos.length !== 1) throw Error('请选择顶部相机首帧图片，或只选择一个视频。');
+  const video = el('video');
+  const url = URL.createObjectURL(videos[0]);
+  video.preload = 'auto';
+  video.muted = true;
+  try {
+    const loaded = mediaEvent(video,'loadeddata');
+    video.src = url;
+    await loaded;
+    return encodeFrame(video,video.videoWidth,video.videoHeight);
+  } finally {
+    video.removeAttribute('src');
+    video.load();
+    URL.revokeObjectURL(url);
+  }
+}
+const frameFeatures = new WeakMap();
+async function describeFrame(thumbnail) {
+  const image = el('img');
+  image.src = 'data:image/jpeg;base64,' + thumbnail;
+  await image.decode();
+  const canvas = el('canvas');
+  canvas.width = 32;
+  canvas.height = 24;
+  const context = canvas.getContext('2d',{willReadFrequently:true});
+  context.drawImage(image,0,0,32,24);
+  const {data} = context.getImageData(0,0,32,24);
+  // Compare color and position on the table while giving the central area more weight.
+  const colors = [];
+  for (let y = 4; y < 23; y++) {
+    for (let x = 2; x < 30; x++) {
+      const p = 4 * (y * 32 + x);
+      colors.push([data[p],data[p+1],data[p+2]]);
+    }
+  }
+  return colors;
+}
+function frameDistance(a,b) {
+  let distance = 0;
+  for (let i = 0; i < a.length; i++) {
+    const [r,g,blue] = a[i];
+    const [s,t,u] = b[i];
+    distance += Math.abs(r-s) + Math.abs(g-t) + Math.abs(blue-u)
+      + Math.abs((r-g)-(s-t)) + Math.abs((g-blue)-(t-u));
+  }
+  return distance / a.length;
+}
+async function rankSceneMatches(thumbnail,taskType,level,isCurrent) {
+  const query = await describeFrame(thumbnail);
+  const {groups} = aggregateGroups(taskType,level);
+  const results = [];
+  for (const [index,group] of groups.entries()) {
+    if (!isCurrent()) return [];
+    let best;
+    for (const record of group.records) {
+      if (record.source !== 'official' || !record.thumbnail) continue;
+      try {
+        let features = frameFeatures.get(record);
+        if (!features) {
+          features = await describeFrame(record.thumbnail);
+          frameFeatures.set(record,features);
+        }
+        const distance = frameDistance(query,features);
+        if (!best || distance < best.distance) best = {record,distance};
+      } catch { /* Skip any unreadable reference frame. */ }
+    }
+    if (best) results.push({...best,scene:groupScene(group,index,level)});
+  }
+  return results.sort((a,b) => a.distance-b.distance).slice(0,5);
+}
+$('sample-match-run').onclick = async () => {
+  if (!matchSession) return;
+  resetMatch();
+  const session = matchSession;
+  const isCurrent = () => session === matchSession && $('sample-dialog').open;
+  $('sample-match-run').disabled = true;
+  $('sample-match-status').textContent = '正在对比当前任务的官方首帧…';
+  try {
+    const thumbnail = await matchingFrame();
+    if (!isCurrent()) return;
+    session.thumbnail = thumbnail;
+    const preview = $('sample-match-preview');
+    preview.src = 'data:image/jpeg;base64,' + thumbnail;
+    preview.hidden = false;
+    const results = await rankSceneMatches(thumbnail,session.taskType,session.level,isCurrent);
+    if (!isCurrent()) return;
+    $('sample-match-status').textContent = results.length
+      ? '请核对物品种类、数量和摆放位置，再选择对应场景。没有合适的候选时请先不要保存。'
+      : '当前任务没有可供比较的官方首帧。';
+    const buttons = results.map(({record,scene}) => {
+      const button = el('button');
+      button.type = 'button';
+      button.setAttribute('aria-pressed','false');
+      const image = el('img');
+      image.src = 'data:image/jpeg;base64,' + record.thumbnail;
+      image.alt = scene.name + ' 的相似官方首帧';
+      button.append(image,el('span','',scene.name + (scene.paperCount ? ' · ' + scene.paperCount + ' 个纸团' : '')));
+      button.onclick = () => {
+        sampleContext = {...scene,taskType:session.taskType};
+        $('sample-scene').textContent = tasks.get(session.taskType) + ' · ' + scene.name;
+        for (const candidate of buttons) candidate.setAttribute('aria-pressed',String(candidate === button));
+        $('sample-save').disabled = false;
+      };
+      return button;
+    });
+    $('sample-match-list').replaceChildren(...buttons);
+  } catch (error) {
+    if (isCurrent()) $('sample-match-status').textContent = (error.message || '无法读取首帧。') + ' 可改用顶部相机首帧图片。';
+  } finally {
+    if (isCurrent()) $('sample-match-run').disabled = false;
+  }
+};
+$('sample-cancel').onclick = () => $('sample-dialog').close();
+$('sample-dialog').oncancel = event => { if ($('sample-cancel').disabled) event.preventDefault(); };
+$('sample-dialog').onclose = () => { matchSession = null; };
+$('sample-form').onsubmit = async event => {
+  event.preventDefault();
+  if ($('sample-save').disabled) return;
+  const context = sampleContext;
+  const collectedObject = $('sample-target').value.trim();
+  const files = [...$('sample-files').files];
+  const frame = $('sample-frame').files[0];
+  if (!context || !collectedObject || !files.length) {
+    $('sample-status').textContent = '请填写物品名称，并选择采集文件。';
+    return;
+  }
+  $('sample-save').disabled = $('sample-cancel').disabled = true;
+  $('sample-status').textContent = '正在保存文件…';
+  try {
+    const record = {id:'自采-' + crypto.randomUUID(),source:'own',taskType:context.taskType,
+      group:context.originalGroup ?? null,groupName:context.originalName,method:'manual',
+      collectedObject,aggregateAnchor:context.anchor,thumbnail:matchSession?.thumbnail || await jpegThumbnail(frame),
+      fileNames:files.map(file => file.name)};
+    const entry = {record,files};
+    await sampleTransaction('readwrite',store => store.add(entry));
+    localSamples.set(record.id,entry);
+    episodes = mergeLocalSamples(episodes);
+    aggregateView = false;
+    aggregateMembers = {...context,ids:new Set([...context.ids,record.id])};
+    selectedTask = context.taskType;
+    selected = 'all';
+    page = 1;
+    $('source').value = 'own';
+    $('search').value = '';
+    $('sample-dialog').close();
+    notice('已补充自采样本：' + collectedObject + '。');
+    draw();
+  } catch (error) {
+    $('sample-status').textContent = '保存失败：' + (error.message || '请检查浏览器存储空间后重试。');
+  } finally { $('sample-save').disabled = $('sample-cancel').disabled = false; }
+};
+function downloadSample(file) {
+  const url = URL.createObjectURL(file);
+  const link = el('a');
+  link.href = url;
+  link.download = file.name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+}
+
+function el(tag, style, text) {
+  const node = document.createElement(tag);
+  if (style) node.className = style;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+function notice(message) { $('notice').textContent = message; }
+function configuration(record) {
+  const manual = overrides.get(record.id);
+  const taskType = (manual ? manual.taskType : record.taskType) || 'pending';
+  const group = taskType === 'pending' ? review : (manual ? manual.group : record.group) || review;
+  return {taskType, group, name:manual ? manual.name : record.groupName, method:manual ? 'manual' : record.method};
+}
+function drawCoverage() {
+  const panel = $('coverage');
+  panel.hidden = !aggregateMembers && (!['pick_place','cosmetics'].includes(selectedTask) || ['all',review].includes(selected));
+  panel.replaceChildren();
+  if (panel.hidden) return;
+
+  if (aggregateMembers) {
+    const reference = episodes.find(record => record.id === aggregateMembers.anchor);
+    if (reference?.thumbnail) {
+      const image = el('img','coverage-reference');
+      image.src = 'data:image/jpeg;base64,' + reference.thumbnail;
+      image.alt = '当前聚合场景的代表首帧';
+      panel.append(el('h3','','场景代表首帧'),image);
+    }
+  }
+  const sceneRecords = episodes.filter(record => {
+    const {taskType,group} = configuration(record);
+    return taskType === selectedTask && (aggregateMembers ? aggregateMembers.ids.has(record.id) : group === selected);
+  });
+  const officialCounts = new Map();
+  const combinedCounts = new Map();
+  let unresolved = 0;
+  for (const record of sceneRecords) {
+    const target = objectTarget(record) || (selectedTask === 'sweeping' && record.source === 'official' && aggregateMembers?.paperCount
+      ? aggregateMembers.paperCount + ' 个纸团' : '');
+    if (!target) {
+      if (record.source === 'official') unresolved++;
+      continue;
+    }
+    combinedCounts.set(target,(combinedCounts.get(target) || 0) + 1);
+    if (record.source === 'official') officialCounts.set(target,(officialCounts.get(target) || 0) + 1);
+  }
+  const coverage = el('div','coverage-list');
+  for (const [name,count] of [...officialCounts].sort((a,b) => b[1]-a[1])) {
+    coverage.append(el('span','',name + ' · ' + count + ' 条'));
+  }
+  if (unresolved) coverage.append(el('span','','目标未识别 · ' + unresolved + ' 条'));
+  if (!coverage.children.length) coverage.append(el('span','','当前场景暂无已识别的官方记录'));
+  panel.append(el('h3','','官方样本目标'),coverage);
+  if (aggregateMembers) {
+    const summary = el('div','coverage-list');
+    for (const [name,count] of combinedCounts)
+      summary.append(el('span','',name + ' · 官方 ' + (officialCounts.get(name) || 0) + ' / 自采 ' + (count - (officialCounts.get(name) || 0))));
+    if (summary.children.length) panel.append(el('h3','','组内物品覆盖'),summary);
+    const add = el('button','primary','补充自采样本');
+    add.onclick = () => openSample(aggregateMembers);
+    panel.append(add);
+    if (selectedTask === 'sweeping') return;
+  }
+
+  const instruction = el('p','muted','');
+  const sceneKey = JSON.stringify([selectedTask,aggregateMembers ? [aggregateMembers.level,aggregateMembers.anchor] : selected]);
+  const confirmed = confirmedObjects.get(sceneKey) || new Set();
+  confirmedObjects.set(sceneKey,confirmed);
+  const confirmedList = el('div','coverage-list');
+  const select = el('select');
+  select.append(new Option('请选择首帧里看到的物品',''));
+  const candidates = objectCandidates();
+  for (const name of [...new Set([...candidates,...combinedCounts.keys()])].sort((a,b) =>
+    (combinedCounts.get(a) || 0) - (combinedCounts.get(b) || 0) || a.localeCompare(b,'zh-CN'))) {
+    select.append(new Option(name + ' · 本场景 ' + (combinedCounts.get(name) || 0) + ' 条',name));
+  }
+  const countFor = name => combinedCounts.get(name) || 0;
+  const update = () => {
+    confirmedList.replaceChildren(...[...confirmed].map(name => {
+      const button = el('button','',name + ' · ' + (countFor(name) ? countFor(name) + ' 条' : '未有记录') + ' ×');
+      button.setAttribute('aria-label','移除已确认物品 ' + name);
+      button.onclick = () => { confirmed.delete(name); saveConfirmedObjects(); update(); };
+      return button;
+    }));
+    if (aggregateMembers) {
+      for (const name of confirmed) {
+        if (countFor(name)) continue;
+        const add = el('button','','补采 ' + name);
+        add.onclick = () => openSample(aggregateMembers,name);
+        confirmedList.append(add);
+      }
+    }
+    const options = [...(confirmed.size ? confirmed : officialCounts.keys())];
+    if (!options.length) {
+      instruction.textContent = '请从首帧确认桌面物品，再查看补采建议。';
+      return;
+    }
+    const count = Math.min(...options.map(countFor));
+    const names = '「' + options.filter(item => countFor(item) === count).join('」「') + '」';
+    instruction.textContent = confirmed.size
+      ? '优先补采 ' + names + '。按当前索引，每件在这个场景已有 ' + count + ' 条。' + (!count && unresolved ? ' 另有官方样本的目标尚未识别。' : '')
+      : '若首帧里仍有 ' + names + '，可优先补采。它们在已知目标中采得最少，各 ' + count + ' 条。';
+  };
+  select.onchange = () => {
+    if (select.value) confirmed.add(select.value);
+    saveConfirmedObjects();
+    select.value = '';
+    update();
+  };
+  const label = el('label','','确认桌面物品');
+  label.append(select);
+  panel.append(el('h3','','下次补采建议'),instruction,label,confirmedList);
+  update();
+}
+function indexGroups() {
+  groupsByTask = new Map([...tasks.keys()].map(task => [task, new Map([
+    ['all',{name:'全部样本',official:0,own:0}],
+    [review,{name:task === 'pending' ? '待确认任务' : '场景待复核',official:0,own:0}]
+  ])]));
+  for (const record of episodes) {
+    const {taskType,group,name} = configuration(record);
+    const groups = groupsByTask.get(taskType);
+    if (!groups.has(group)) groups.set(group,{name:name || '相似场景 ' + (groups.size-1),official:0,own:0});
+    groups.get(group)[record.source]++;
+    groups.get('all')[record.source]++;
+  }
+}
+const total = group => group.official + group.own;
+function draw() {
+  indexGroups();
+  $('show-original').setAttribute('aria-pressed',String(!aggregateView));
+  $('show-aggregate').setAttribute('aria-pressed',String(aggregateView));
+  $('original-panel').hidden = aggregateView;
+  $('aggregate-panel').hidden = !aggregateView;
+  $('tasks').replaceChildren(...[...tasks].map(([task,name]) => {
+    const button = el('button','task');
+    button.setAttribute('aria-pressed',String(task === selectedTask));
+    button.append(el('span','',name),el('span','task-count',total(groupsByTask.get(task).get('all'))));
+    button.onclick = () => { selectedTask = task; selected = 'all'; aggregateMembers = null; page = 1; draw(); };
+    return button;
+  }));
+  const groups = groupsByTask.get(selectedTask);
+  if (!groups.has(selected)) selected = 'all';
+  const all = groups.get('all');
+  $('stats').replaceChildren(...[
+    ['Episode 总数',total(all)], ['官方样本',all.official], ['自采样本',all.own],
+    ['场景分组',groups.size-2], ['待复核',total(groups.get(review))]
+  ].map(([name,count]) => {
+    const box = el('div','stat');
+    box.append(el('span','',name),el('b','',count));
+    return box;
+  }));
+  $('groups').replaceChildren(...Array.from(groups,([id,group]) => {
+    const button = el('button','group');
+    button.setAttribute('aria-pressed',String(id === selected));
+    button.append(el('span','',group.name),el('span','',id === 'all' ? String(total(group)) : '官 ' + group.official + ' · 自 ' + group.own));
+    button.onclick = () => { selected = id; aggregateMembers = null; page = 1; draw(); };
+    return button;
+  }));
+  $('export').disabled = !episodes.length;
+  if (aggregateView) { drawAggregate(); return; }
+  drawCoverage();
+  drawEpisodes();
+}
+function drawEpisodes() {
+  const source = $('source').value;
+  const query = $('search').value.trim().toLowerCase();
+  const filtered = episodes.filter(record =>
+    (!aggregateMembers || aggregateMembers.ids.has(record.id)) &&
+    configuration(record).taskType === selectedTask &&
+    (selected === 'all' || configuration(record).group === selected) &&
+    (!source || record.source === source) &&
+    (!query || (record.id + ' ' + (record.task || '') + ' ' + objectTarget(record)).toLowerCase().includes(query)));
+  const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  page = Math.min(page,pages);
+  $('title').textContent = aggregateMembers?.name || titleFor(selected);
+  $('return-aggregate').hidden = !aggregateMembers;
+  $('count').textContent = filtered.length + ' 条 Episode';
+  $('pagination').hidden = pages === 1;
+  $('page').textContent = page + ' / ' + pages;
+  $('prev').disabled = page === 1;
+  $('next').disabled = page === pages;
+  const cards = filtered.slice((page-1)*pageSize,page*pageSize).map(record => {
+    const card = el('article','item');
+    if (record.thumbnail) card.append(framePreview(record));
+    else card.append(el('div','placeholder','无可用初始帧'));
+    const content = el('div','item-copy');
+    const head = el('div','item-head');
+    head.append(el('h3','',record.id),el('span','badge ' + record.source,record.source === 'own' ? '自采' : '官方'));
+    const meta = configuration(record);
+    content.append(head,el('p','muted scene-name',record.aggregateAnchor ? '聚合场景自采补充' : titleFor(meta.group) + ' · ' + (methods[meta.method] || '待复核')));
+    if (['pick_place','cosmetics'].includes(meta.taskType) || record.collectedObject) {
+      const target = objectTarget(record);
+      content.append(el('p','target', target ? (meta.taskType === 'sweeping' ? '清扫对象 · ' : '抓取目标 · ') + target : '抓取目标待确认'));
+    }
+    if (record.targetBoxLabel) content.append(el('p','target',record.targetBoxLabel));
+    if (!boxesFor(record).length && record.thumbnail)
+      content.append(el('p','muted','待确认目标位置'));
+    else if (record.targetBoxNeedsReview && !boxOverrides.has(record.id))
+      content.append(el('p','muted','红框位置待复核'));
+    if (record.task) content.append(el('p','muted',record.task));
+    if (record.error) content.append(el('p','notice',record.error));
+    const button = el('button','',selectedTask === 'pending' ? '确认任务' : '调整任务与场景');
+    button.onclick = () => edit(record);
+    if (!localSamples.has(record.id)) content.append(button);
+    const entry = localSamples.get(record.id);
+    if (entry?.files.length) {
+      const files = el('div','sample-files');
+      for (const file of entry.files) {
+        const link = el('button','','下载 ' + file.name);
+        link.onclick = () => downloadSample(file);
+        files.append(link);
+      }
+      content.append(files);
+    } else if (Array.isArray(record.fileNames) && record.fileNames.length) content.append(el('p','muted','仅有索引 · ' + record.fileNames.join('、')));
+    if (syncedSamples.has(record.id)) {
+      content.append(el('p','muted','主机采集编号 · ' + record.captureId));
+      const link = el('a','','下载采集包');
+      link.href = '/sync/archive/' + encodeURIComponent(record.id);
+      content.append(link);
+      const label = el('button','','确认采集物品和场景');
+      label.onclick = () => editSyncedSample(record);
+      content.append(label);
+    }
+    if (record.source === 'own' && (entry || syncedSamples.has(record.id))) {
+      const remove = el('button','','删除自采样本');
+      remove.onclick = () => deleteOwnSample(record);
+      content.append(remove);
+    }
+    if (record.thumbnail && (objectTarget(record) || record.targetBoxLabel)) {
+      const editBox = el('button','','调整红框');
+      editBox.onclick = () => openBoxEditor(record);
+      content.append(editBox);
+    }
+    card.append(content);
+    return card;
+  });
+  $('grid').replaceChildren(...(cards.length ? cards : [el('p','empty muted',episodes.length ? '没有符合当前条件的样本。' : '请选择由索引脚本生成的 scene-index.json。')]));
+}
+function editSyncedSample(record) {
+  const dialog = el('dialog');
+  const form = el('form','modal-content');
+  const task = el('select'), scene = el('select'), target = el('input');
+  target.placeholder = '填写实际采集的物品';
+  target.required = true;
+  target.maxLength = 80;
+  target.value = objectTarget(record);
+  for (const [id,name] of tasks) if (id !== 'pending') task.append(new Option(name,id));
+  task.value = record.taskType || 'pick_place';
+  const choices = () => {
+    const {groups} = aggregateGroups(task.value,'推荐');
+    scene.replaceChildren(new Option('场景待确认',''),...groups.map((group,index) => {
+      const option = groupScene(group,index,'推荐');
+      return new Option(option.name,option.anchor);
+    }));
+    scene.value = record.aggregateAnchor || '';
+    if (scene.selectedIndex < 0) scene.value = '';
+  };
+  task.onchange = choices;
+  choices();
+  const field = (name,input) => { const label = el('label','',name); label.append(input); return label; };
+  const cancel = el('button','','取消');
+  cancel.type = 'button';
+  cancel.onclick = () => dialog.close();
+  const save = el('button','primary','保存标注');
+  save.type = 'submit';
+  const status = el('p','muted');
+  form.append(el('h2','','确认自采样本'),field('任务',task),field('聚合场景（推荐）',scene),field('实际采集物品',target),status,cancel,save);
+  form.onsubmit = async event => {
+    event.preventDefault();
+    save.disabled = true;
+    try {
+      const response = await fetch('/sync/label',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:record.id,taskType:task.value,anchor:scene.value,collectedObject:target.value.trim()})});
+      if (!response.ok) throw Error('请检查任务、场景和物品名称。');
+      await refreshSyncedSamples();
+      dialog.close();
+    } catch (error) { status.textContent = error.message; }
+    finally { save.disabled = false; }
+  };
+  dialog.onclose = () => dialog.remove();
+  dialog.append(form);
+  document.body.append(dialog);
+  dialog.showModal();
+}
+function showSceneView(enabled) {
+  aggregateView = enabled;
+  aggregateMembers = null;
+  selected = 'all';
+  page = 1;
+  draw();
+}
+function aggregateGroups(taskType,level) {
+  const lookup = new Map(episodes.filter(record => configuration(record).taskType === taskType)
+    .map(record => [record.id,record]));
+  const attached = new Map();
+  for (const record of lookup.values()) {
+    if (record.source !== 'own' || !record.aggregateAnchor) continue;
+    if (!attached.has(record.aggregateAnchor)) attached.set(record.aggregateAnchor,[]);
+    attached.get(record.aggregateAnchor).push(record);
+  }
+  const groups = (aggregation[level]?.[taskType] || []).map(group => ({
+    ...group,
+    records:group.members.flatMap(id => {
+      const record = lookup.get(id);
+      return record ? [record,...(attached.get(id) || [])] : [];
+    })
+  })).filter(group => group.records.length);
+  return {groups,total:lookup.size};
+}
+function groupScene(group,index,level) {
+  const representative = group.records[0];
+  const original = configuration(representative);
+  return {name:'聚合场景 ' + (index+1),level,anchor:representative.id,paperCount:group.paperCount,
+    originalGroup:original.group === review ? null : original.group,originalName:original.name,
+    ids:new Set(group.records.map(record => record.id))};
+}
+function drawAggregate() {
+  const level = $('aggregate-level').value;
+  const {groups,total} = aggregateGroups(selectedTask,level);
+  $('sample-match-open').disabled = !groups.length;
+  const assigned = new Set(groups.flatMap(group => group.records.map(record => record.id)));
+  const unindexed = total - assigned.size;
+  const shown = groups.filter(group => group.records.length > 1 || !$('aggregate-multiple').checked);
+  $('aggregate-count').textContent = shown.length + ' / ' + groups.length + ' 组 · ' + assigned.size + ' 条样本'
+    + (unindexed ? ' · ' + unindexed + ' 条尚无聚合结果' : '');
+  const cards = shown.map(group => {
+    const scene = groupScene(group,groups.indexOf(group),level);
+    const {name} = scene;
+    const representative = group.records[0];
+    const card = el('article','item');
+    if (representative.thumbnail) {
+      const image = el('img','aggregate-preview');
+      image.src = 'data:image/jpeg;base64,' + representative.thumbnail;
+      image.alt = name + ' 的顶部相机代表首帧';
+      image.loading = 'lazy';
+      card.append(image);
+    }
+    const body = el('div','item-copy');
+    const targets = source => [...new Set(group.records.filter(record => record.source === source).map(objectTarget).filter(Boolean))];
+    const officialTargets = targets('official');
+    const ownTargets = targets('own');
+    const totals = group.records.reduce((count,record) => count+(record.source === 'official'),0);
+    body.append(el('h3','',name),el('p','muted',group.records.length+' 条 · 官方 '+totals+' · 自采 '+(group.records.length-totals)));
+    if (group.paperCount) body.append(el('p','target',group.paperCount + ' 个纸团'));
+    if (officialTargets.length) body.append(el('p','muted','官方样本指令目标 · ' + officialTargets.join('、')));
+    if (ownTargets.length) body.append(el('p','muted','自采物品 · ' + ownTargets.join('、')));
+    const open = el('button','','查看组内样本');
+    open.onclick = () => {
+      aggregateView = false;
+      aggregateMembers = scene;
+      $('source').value = '';
+      $('search').value = '';
+      selected = 'all';
+      page = 1;
+      draw();
+    };
+    const add = el('button','','补充自采样本');
+    add.onclick = () => openSample(scene);
+    body.append(open,add);
+    card.append(body);
+    return card;
+  });
+  $('aggregate-grid').replaceChildren(...(cards.length ? cards : [el('p','empty muted',
+    groups.length ? '没有多条样本的组。可取消勾选查看单条场景。' : '当前任务没有可用的聚合结果。')]));
+}
+$('show-original').onclick = () => showSceneView(false);
+$('show-aggregate').onclick = () => showSceneView(true);
+$('return-aggregate').onclick = () => showSceneView(true);
+$('aggregate-level').onchange = $('aggregate-multiple').onchange = drawAggregate;
+function edit(record) {
+  editing = record;
+  const current = configuration(record);
+  $('episode-info').textContent = record.id + ' · ' + tasks.get(current.taskType) + ' · ' + titleFor(current.group,current.taskType);
+  $('task-destination').replaceChildren(...[...tasks].map(([id,name]) => new Option(name,id)));
+  $('task-destination').value = current.taskType;
+  $('name').value = '';
+  updateDestinations();
+  $('dialog').showModal();
+}
+function updateDestinations() {
+  const task = $('task-destination').value;
+  const current = configuration(editing);
+  const groups = groupsByTask.get(task);
+  const options = [...groups].filter(([id]) => id !== 'all').map(([id,group]) => new Option(group.name,id));
+  if (task !== 'pending') options.push(new Option('新建场景…','new'));
+  options.push(new Option('恢复索引归类','auto'));
+  $('destination').replaceChildren(...options);
+  $('destination').value = task === current.taskType ? current.group : review;
+  toggleName();
+}
+function toggleName() {
+  const show = $('destination').value === 'new';
+  $('new-name').hidden = !show;
+  $('name').required = show;
+}
+$('destination').onchange = toggleName;
+$('task-destination').onchange = updateDestinations;
+$('cancel').onclick = () => $('dialog').close();
+$('form').onsubmit = event => {
+  event.preventDefault();
+  const value = $('destination').value;
+  const taskType = $('task-destination').value;
+  const groups = groupsByTask.get(taskType);
+  const name = $('name').value.trim();
+  if (value === 'new' && !name) { $('name').focus(); return; }
+  if (value === 'auto') overrides.delete(editing.id);
+  else if (value === 'new') {
+    const existing = [...groups].find(([key,group]) => key !== 'all' && key !== review && group.name === name);
+    overrides.set(editing.id,{taskType, group:existing ? existing[0] : 'manual:' + name, name});
+  } else overrides.set(editing.id,{taskType, group:value, name:titleFor(value,taskType)});
+  try { localStorage.setItem(overridesKey,JSON.stringify([...overrides])); notice(''); }
+  catch { notice('浏览器无法保存调整。请导出当前分组清单。'); }
+  $('dialog').close();
+  draw();
+};
+$('import').onchange = async event => {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    const seen = new Set();
+    if (![1,2].includes(data.schemaVersion) || !Array.isArray(data.episodes) || !data.episodes.every(record => {
+      if (!record || typeof record.id !== 'string' || !record.id || seen.has(record.id) ||
+          !['official','own'].includes(record.source) ||
+          (data.schemaVersion === 2 && record.taskType !== null && !['pick_place','cosmetics','sweeping'].includes(record.taskType)) ||
+          (record.group !== null && (typeof record.group !== 'string' || !/^(label|visual|manual):.+/.test(record.group))) ||
+          (record.thumbnail && (typeof record.thumbnail !== 'string' || !/^[a-z0-9+/]+={0,2}$/i.test(record.thumbnail)))) return false;
+      seen.add(record.id);
+      return true;
+    })) throw Error('格式有误，请选择索引脚本生成的 JSON。');
+    episodes = mergeLocalSamples(data.schemaVersion === 2 ? data.episodes :
+      data.episodes.map(record => ({...record,taskType:null,group:null,groupName:null,method:'review'})));
+    aggregateMembers = null;
+    selectedTask = episodes.length ? configuration(episodes[0]).taskType : 'pick_place';
+    selected = 'all';
+    page = 1;
+    $('loaded').textContent = '已导入 ' + file.name + ' · 相似度阈值 ' + (data.threshold ?? '—');
+    notice(data.schemaVersion === 1 ? '已读取旧版索引。请用新版脚本按任务重建索引，或在「任务待确认」里手动归类。' : '');
+    draw();
+  } catch (error) { notice('导入失败。' + error.message); }
+};
+$('source').onchange = $('search').oninput = () => { page = 1; drawEpisodes(); };
+$('prev').onclick = () => { page--; drawEpisodes(); };
+$('next').onclick = () => { page++; drawEpisodes(); };
+$('export').onclick = () => {
+  const records = episodes.map(({thumbnail,...record}) => {
+    const meta = configuration(record);
+    return {...record, targetBoxes:boxesFor(record), targetBoxNeedsReview:!boxOverrides.has(record.id) && Boolean(record.targetBoxNeedsReview),
+      taskType:meta.taskType === 'pending' ? null : meta.taskType,
+      group:meta.group === review ? null : meta.group,
+      groupName:titleFor(meta.group,meta.taskType), method:meta.method};
+  });
+  const url = URL.createObjectURL(new Blob([JSON.stringify({schemaVersion:2,episodes:records},null,2)],{type:'application/json'}));
+  const link = el('a');
+  link.href = url;
+  link.download = 'scene-assignments.json';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+};
+void loadOwnSamples();
+if (syncEnabled) {
+  void refreshSyncedSamples();
+  setInterval(refreshSyncedSamples,15000);
+}
+draw();
+</script>
+</html>
